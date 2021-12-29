@@ -7,17 +7,13 @@ import scrapy
 from scrapy.item import Field
 
 
-class AppItem(scrapy.Item):
+class ProductItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     title = Field()
     price = Field()
     description = Field()
-    address = Field()
     image_urls = Field()
-
-    images = Field()
-    location = Field()
 
     url = Field()
     project = Field()
