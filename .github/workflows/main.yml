@@ -19,7 +19,7 @@ jobs:
               pip install pylint
         - name: Analysing the code with pylint
           run: |
-              pylint . --rcfile=.pylintrc
+              pylint app/ --rcfile=.pylintrc
         - name: update Docker image
           if: ${{ github.event_name == 'push' || github.event.pull_request.merge }}
           env:
