@@ -4,10 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-scrapy = "*"
 items = "*"
 importlib = "*"
-requests = "*"
+requests = "~=2.26.0"
+itemloaders = "~=1.0.4"
+itemadapter = "~=0.4.0"
+Scrapy = "~=2.5.1"
 
 [dev-packages]
 
