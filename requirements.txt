@@ -1,0 +1,4 @@
+Scrapy~=2.5.1
+itemloaders~=1.0.4
+itemadapter~=0.4.0
+requests~=2.26.0
