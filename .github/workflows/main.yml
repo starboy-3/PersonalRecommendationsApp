@@ -17,9 +17,11 @@ jobs:
               python -m pip install --upgrade pip
               pip install -r requirements.txt
               pip install pylint
+              pip install flake8
         - name: Analysing the code with pylint
           run: |
               pylint . --rcfile=.pylintrc
+              flake8 . --jobs=4 --append-config=.flake
         - name: update Docker image
           if: ${{ github.event_name == 'push' || github.event.pull_request.merge }}
           env:
