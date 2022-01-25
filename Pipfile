@@ -12,6 +12,7 @@ itemadapter = "~=0.4.0"
 Scrapy = "~=2.5.1"
 psycopg2-binary = "*"
 dynaconf = "*"
+flake8 = "*"
 
 [dev-packages]
 

@@ -1,7 +1,6 @@
 import datetime
 import socket
 
-import scrapy
 from itemloaders import ItemLoader
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
