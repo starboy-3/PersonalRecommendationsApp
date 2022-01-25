@@ -5,4 +5,4 @@
 
 
 from scrapy.cmdline import execute
-execute("scrapy crawl cropp -o items.json".split())
+execute("scrapy crawl easy -o items.json".split())

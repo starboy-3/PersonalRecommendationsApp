@@ -1,7 +1,6 @@
 import datetime
 import socket
 
-import scrapy
 from itemloaders import ItemLoader
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
@@ -17,10 +16,12 @@ class EasySpider(CrawlSpider):
     # rules = (
     #     Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
     # )
-    rules = (Rule(LinkExtractor(restrict_xpaths='//*[contains(@class,"next")]')),
-             Rule(LinkExtractor(restrict_xpaths='//*[@itemprop="url"]'),
-                  callback='parse_item')
-             )
+
+    rules = (
+        Rule(LinkExtractor(restrict_xpaths='//div[@class="_2xLfY"]')),
+        Rule(LinkExtractor(restrict_xpaths='//a[@class="_37mjk"]'),
+             callback='parse_item')
+    )
 
     def parse_item(self, response):
         l = ItemLoader(item=ProductItem(), selector=response)

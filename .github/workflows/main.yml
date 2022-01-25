@@ -1,6 +1,6 @@
 name: PyLint
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
     test:
@@ -23,7 +23,7 @@ jobs:
               pylint . --rcfile=.pylintrc
               flake8 . --jobs=4 --append-config=.flake
         - name: update Docker image
-          if: ${{ github.event_name == 'push' || github.event.pull_request.merge }}
+          if: ${{ github.event.pull_request.merge }}
           env:
             DOCKER_USERNAME: 'starboy369'
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
