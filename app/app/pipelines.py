@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 import psycopg2
-from itemadapter import ItemAdapter
+# from itemadapter import ItemAdapter
 from dynaconf import settings
 
 class AppPipeline:
