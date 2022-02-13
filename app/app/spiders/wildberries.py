@@ -4,7 +4,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import Selector
 
-from wildberries.items import PageItem, PageItemLoader, ProductItem, ProductItemLoader
+from app.items import PageItem, PageItemLoader, ProductItem, ProductItemLoader
 
 
 def remove_params(link: str) -> str:
@@ -24,8 +24,8 @@ def remove_params_except_page(link: str) -> str:
     return link[:query_i]
 
 
-class CommonCrawler(CrawlSpider):
-    name = 'common_crawler'
+class WildberriesCrawler(CrawlSpider):
+    name = 'wildberries'
     allowed_domains = ['www.wildberries.ru']
     start_urls = [
         # 'https://www.wildberries.ru/catalog/yuvelirnye-ukrasheniya/koltsa',     # FOR RUN IN TEST MODE

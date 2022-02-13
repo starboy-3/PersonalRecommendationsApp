@@ -1,32 +1,26 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+from scrapy.exporters import CsvItemExporter
 
 
-# useful for handling different item types with a single interface
-import psycopg2
-# from itemadapter import ItemAdapter
-from dynaconf import settings
+def item_type(item):
+    return type(item).__name__.replace('Item', '').lower()  # ProductItem => product
 
-class AppPipeline:
+
+class MultiCSVItemPipeline:
+    SaveTypes = ['page', 'product']
+
     def __init__(self):
-        self.cur = None
-        self.connection = None
+        self.files = dict([(name, open('./csvs/' + name + '.csv', 'w+b')) for name in self.SaveTypes])
+        self.exporters = dict([(name, CsvItemExporter(self.files[name])) for name in self.SaveTypes])
 
-    def open_spider(self, spider):
-        hostname = settings.db_hostname # localhost
-        username = settings.db_username # 'postgres'
-        password = settings.password # TODO: password
-        database = settings.db_name # 'app' #TODO:
-        self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
-        self.cur = self.connection.cursor()
+    def spider_opened(self, spider):
+        [e.start_exporting() for e in self.exporters.values()]
 
-    def close_spider(self, spider):
-        self.cur.close()
-        self.connection.close()
+    def spider_closed(self, spider):
+        [e.finish_exporting() for e in self.exporters.values()]
+        [f.close() for f in self.files.values()]
 
     def process_item(self, item, spider):
-        self.cur.execute() # FIXME:
-        self.connection.commit()
+        item_t = item_type(item)
+        if item_t in set(self.SaveTypes):
+            self.exporters[item_t].export_item(item)
         return item
