@@ -14,7 +14,7 @@ class AsosSpider(scrapy.Spider):
     def parse(self, response):
         l = ItemLoader(item=ProductItem(), selector=response)
 
-        l.add_xpath('title', '/html/body/div[1]/div/main/div[2]/section[1]/div/div[2]/div[2]/div[1]/h1/text()')
+        l.add_xpath('title', '/html/body/div[1]/div/main/div[2]/section[1]/div/div[2]/div[2]/div[1]/h1/text()')git c
         # l.add_xpath('price', '//span[@data-id="current-price"]/text()')
         l.add_xpath('price', '/html/body/div[1]/div/main/div[2]/section[1]/div/div[2]/div[2]/div[1]/div[1]/div/span[2]/span[4]/span[1]')
         # l.add_css('price', 'span.current-price.product-price-discounted::text')
