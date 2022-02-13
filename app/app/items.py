@@ -13,7 +13,7 @@ class ProductItem(scrapy.Item):
     title = Field()
     price = Field()
     description = Field()
-    image_urls = Field()
+    image_urls = Field() # ML
 
     url = Field()
     project = Field()
