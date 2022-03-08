@@ -17,6 +17,7 @@ class PostgreSQLStorePipeline:
         self.connection.set_session(autocommit=True)
 
     def process_item(self, item, spider):
+        # FIXME            below sql
         self.cur.execute("insert into quotes_content(content,author) values(%s,%s)", (item['content'], item['author']))
         self.connection.commit()
         return item
