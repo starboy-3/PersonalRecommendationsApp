@@ -25,6 +25,7 @@ class ProductItem(scrapy.Item):
     product_id = scrapy.Field()
     product_name = scrapy.Field()
     seller = scrapy.Field()
+    seller_id = scrapy.Field()
     price = scrapy.Field()
     description = scrapy.Field()
     # features = scrapy.Field()   # store as JSON object? or should we create new tables?

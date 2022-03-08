@@ -103,6 +103,7 @@ class WildberriesCrawler(CrawlSpider):
         selector = Selector(response)
         loader = ProductItemLoader(ProductItem(), selector)
         loader.add_value('product_id', re.search('.*/([0-9]+)/.*', response.url, re.IGNORECASE).group(1))
+        loader.add_xpath('seller_id', '//div[@class = "seller-details__logo-wrap"]/a/@href', re=r'\d+')
         loader.add_xpath('product_name', '//span[contains(@data-link, "text{:product^goodsName}")]/text()')
         loader.add_xpath('seller', '//span[contains(@data-link, "text{:product^brandName}")]/text()')
         loader.add_css('price', 'div.same-part-kt__price-block > div > div > '
