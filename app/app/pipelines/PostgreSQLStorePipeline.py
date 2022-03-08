@@ -14,6 +14,7 @@ class PostgreSQLStorePipeline:
         database = settings["db_name"]
         self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         self.cur = self.connection.cursor()
+        self.connection.set_session(autocommit=True)
 
     def process_item(self, item, spider):
         self.cur.execute("insert into quotes_content(content,author) values(%s,%s)", (item['content'], item['author']))
