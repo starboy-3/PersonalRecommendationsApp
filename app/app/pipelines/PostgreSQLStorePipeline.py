@@ -1,5 +1,4 @@
 import psycopg2
-from scrapy.exporters import CsvItemExporter
 from dynaconf import settings
 
 
