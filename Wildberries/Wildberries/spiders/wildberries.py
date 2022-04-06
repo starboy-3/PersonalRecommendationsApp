@@ -10,9 +10,9 @@ class WildberriesSpider(scrapy.Spider):
         for product in response.css('div.j-card-item'):
             link_to_product = product.css('a.j-open-full-product-card::attr(href)').get()
             yield response.follow(link_to_product, callback=self.parse_product)
-        
+
         next_page = response.css('a.pagination__next').attrib['href']
-        if next_page != None:
+        if next_page is not None:
             yield response.follow(next_page, callback=self.parse)
 
     def parse_product(self, response):
@@ -20,7 +20,7 @@ class WildberriesSpider(scrapy.Spider):
 
         for prod in product:
             price = prod.css('span.price-block__final-price::text').get()
-            if price != None:
+            if price is not None:
                 price = price.replace('\u00a0', '').replace('\u20bd', '').strip()
             item = dict()
             item['Ссылка'] = response.url
