@@ -4,7 +4,6 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from itemloaders.processors import MapCompose, TakeFirst
 
 class WildberriesItem(scrapy.Item):
     # define the fields for your item here like:
