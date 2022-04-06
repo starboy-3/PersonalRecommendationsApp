@@ -13,18 +13,18 @@ SPIDER_MODULES = ['app.spiders']
 NEWSPIDER_MODULE = 'app.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'app (+http://www.yourdomain.com)'
+# USER_AGENT = 'app(+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 24
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -44,13 +44,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'app.middlewares.AppSpiderMiddleware': 543,
+#    'app.middlewares.WildberriesSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    'app.middlewares.AppDownloaderMiddleware': 543,
+#    'app.middlewares.WildberriesDownloaderMiddleware': 543,
 # }
 
 # Enable or disable extensions
@@ -62,7 +62,10 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'app.pipelines.AppPipeline': 300
+    # 'app.pipelines.WildberriesPipeline': 300, # default
+    # 'app.pipelines.MultiCSVItemPipeline.MultiCSVItemPipeline': 300,
+    "app.pipelines.CheckFieldsPresentPipeline.CheckFieldsPresentPipeline" : 1,
+    "app.pipelines.PostgreSQLStorePipeline.PostgreSQLStorePipeline" : 20
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
