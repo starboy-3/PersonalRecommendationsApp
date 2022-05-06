@@ -36,7 +36,8 @@ class StemmerWrapper:
         # removing one-symbol words
         sample_s = re.sub(r'\b[ЁёА-я]{1}\b', '', sample_s)
         # removing punctuation
-        sample_s = re.sub(r'[%s]' % re.escape(string.punctuation), ' ', sample_s)
+        sample_s = re.sub(r'[%s]' % re.escape(string.punctuation), ' ',
+                          sample_s)
         # removing one-digit numbers
         sample_s = re.sub(r'\b[0-9]{1}\b', '', sample_s)
         # replacing several-in-a-row space symbols with only one space
@@ -98,10 +99,12 @@ class Loader:
 
         # set dataframe to a `columns`-containing table,
         # where all string infos was split into lists
-        dataframe = dataframe[[content_cname] + columns].apply(self.split_series)
+        dataframe = dataframe[[content_cname] + columns].apply(
+                self.split_series)
 
         # formatting all rows
-        dataframe[content_cname] = reduce(  # firstly, we put add all lists to content containing column
+        # firstly, we put add all lists to content containing column
+        dataframe[content_cname] = reduce(
                 lambda prev, el: prev + dataframe[el],
                 columns,
                 dataframe[content_cname]
@@ -116,7 +119,7 @@ class Loader:
         # set item-representing-column's data
         dataframe[main_id_cname] = id_series
 
-        # return table representing relationship item - formatted_item_content
+        # return table representing relationship item
         return dataframe[[main_id_cname, content_cname]]
 
     def parse(self, table: str, columns: list):

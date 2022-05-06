@@ -32,21 +32,10 @@ class ImplicitRS(structural.CollaborativeFiltering):
 
     def __init__(self):
         super(ImplicitRS, self).__init__()
-        # sparse matrix of implicit user-item interactions
-        self.sparse_matrix = None
         # users matrix in lower rank
         self.users_matrix = None
         # items matrix in lower rank
         self.items_matrix = None
-
-        # dataframes, so we could map indices used in class
-        # methods with indices used in database
-        self.user_indices_decode = None
-        self.item_indices_decode = None
-
-        # column names in database corresponding to user and item
-        self.user_cname = None
-        self.item_cname = None
 
         # projecting [min, max) on range [0, 1) # not sure about
         # boundary points
@@ -54,7 +43,7 @@ class ImplicitRS(structural.CollaborativeFiltering):
 
     def build(self,
               rank=20,
-              iter_count=20,
+              iter_count=25,
               lambda_val=0.1,
               alpha=40):
         """
@@ -188,7 +177,7 @@ class ImplicitRS(structural.CollaborativeFiltering):
         c_item_user = c_user_item.T
 
         # initializing user and item representing matrices
-        user_size, item_size = self.sparse_matrix
+        user_size, item_size = self.sparse_matrix.shape
         user = np.random.rand(user_size, rank) * 0.01  # TODO: try with zeros (perhaps, zero matrices are better, so
         item = np.random.rand(item_size, rank) * 0.01  # we could save some time on first iteration)
 
@@ -253,6 +242,19 @@ class ImplicitRS(structural.CollaborativeFiltering):
 
 if __name__ == '__main__':
     implicit_rec = ImplicitRS()
-    # implicit_rec.load()
-    # implicit_rec.build()
-    # implicit_rec.recommend_to_user(user_id)
+
+    print("loading started...")
+    implicit_rec.load("small_data/lastfm2collab.csv", ["user_id", "item_id"])
+    print("loading finished...")
+
+    print("building started...")
+    implicit_rec.build()
+    print("building finished...")
+
+    q_item = "linkin park"
+    similar_items = implicit_rec.find_similar_item(q_item)
+    print("similar items:", *similar_items, sep="\n")
+
+    q_user = 5985
+    user_recs = implicit_rec.recommend_to_user(q_user)
+    print("\nusers recs:", *user_recs, sep="\n")

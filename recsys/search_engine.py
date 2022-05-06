@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     print("loading started...")
     search_eng.load(
-            "data/product.csv",
+            "small_data/product.csv",
             item_id_cname,
             item_content_cname,
             ["product_name", "description", "seller"]

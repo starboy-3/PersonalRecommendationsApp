@@ -1,12 +1,13 @@
-import scipy.sparse as sparse   # for sparse matrix
+import scipy.sparse as sparse  # for sparse matrix
 
-import loaders
+from basics import loaders
 
 
 class RecommendationSystem:
     """
     Root-class representing recommendation system
     """
+
     def __init__(self):
         pass
 
@@ -22,17 +23,13 @@ class RecommendationSystem:
 
 class CollaborativeFiltering(RecommendationSystem):
     """
-    TODO checkout and comment this class
     Represents recommendation system based on collaborative-filtering
     """
+
     def __init__(self):
         super(CollaborativeFiltering, self).__init__()
         # sparse matrix of implicit user-item interactions
         self.sparse_matrix = None
-        # users matrix in lower rank
-        self.users_matrix = None
-        # items matrix in lower rank
-        self.items_matrix = None
 
         # dataframes, so we could map indices used in class
         # methods with indices used in database
@@ -48,27 +45,43 @@ class CollaborativeFiltering(RecommendationSystem):
              columns: list,
              loader_type: str = "csv",
              connection=None):
-        if len(columns) != 3:
-            raise RuntimeError("CollaborativeFiltering::load: columns argument must "
-                               "contain exactly 3 string-values")
+        """
+        :param table: table name where from data will be read (this
+            either table of database or path to csv file, depending
+            on loader_typ)
+        :param columns: 2 or 3 elements array - names of columns of
+            user, item and their relationship coefficients (if it's
+            provided)
+        :param loader_type: equals either to "csv" or "db", depending
+            on `table`
+        :param connection: if loader_type equals to db, it must be
+            connection to using database (otherwise - whatever)
+
+        Loads data necessary to build model
+        """
+        # check for `columns` length
+        if len(columns) < 2 or len(columns) > 3:
+            raise RuntimeError("CollaborativeFiltering::load: columns "
+                               "argument invalid format")
 
         # initialize loader
         if loader_type == "csv":
             loader = loaders.CsvLoader(None)
         elif loader_type == "db":
             if connection is None:
-                raise RuntimeError("CollaborativeFiltering::load: received connection "
-                                   "equals to None with a loader_type "
-                                   "equals db")
+                raise RuntimeError("CollaborativeFiltering::load: received "
+                                   "connection equals to None with a "
+                                   "loader_type equals db")
             loader = loaders.DataBaseLoader(None, connection)
         else:
-            raise RuntimeError("CollaborativeFiltering::load: no loader available for "
-                               "given loader_type")
+            raise RuntimeError("CollaborativeFiltering::load: no loader "
+                               "available for given loader_type")
 
         # load implicit data in 3-column dataframe
         dataframe = loader.parse(table, columns)
         dataframe.dropna(inplace=True)
 
+        relations_count = dataframe.shape[0]
         # copying column names explicitly
         self.user_cname, self.item_cname = columns[0] + "", columns[1] + ""
         user_id_cname, item_id_cname = columns[0] + "_id", columns[1] + "_id"
@@ -79,9 +92,9 @@ class CollaborativeFiltering(RecommendationSystem):
                 "category").cat.codes
         dataframe[item_id_cname] = dataframe[columns[1]].astype(
                 "category").cat.codes
-        self.item_indices_decode = dataframe[
-            [user_id_cname, columns[0]]].drop_duplicates()
         self.user_indices_decode = dataframe[
+            [user_id_cname, columns[0]]].drop_duplicates()
+        self.item_indices_decode = dataframe[
             [item_id_cname, columns[1]]].drop_duplicates()
         dataframe.drop(columns[:2], axis=1, inplace=True)
 
@@ -90,10 +103,16 @@ class CollaborativeFiltering(RecommendationSystem):
         items = dataframe[item_id_cname].astype(int)
         users_count = len(dataframe[user_id_cname].unique())
         items_count = len(dataframe[item_id_cname].unique())
-        self.sparse_matrix = sparse.csr_matrix(
-                (dataframe[columns[2]], (users, items)),
-                shape=(users_count, items_count)
-        )
+        if len(columns) == 3:
+            self.sparse_matrix = sparse.csr_matrix(
+                    (dataframe[columns[2]], (users, items)),
+                    shape=(users_count, items_count)
+            )
+        elif len(columns) == 2:
+            self.sparse_matrix = sparse.csr_matrix(
+                    ([1 for _ in range(relations_count)], (users, items)),
+                    shape=(users_count, items_count)
+            )
 
     def item2index(self,
                    item):
@@ -111,9 +130,9 @@ class CollaborativeFiltering(RecommendationSystem):
         :param user: user as it is stored in database
         :return: index used in this object for `user`
         """
-        return self.item_indices_decode[
+        return self.user_indices_decode[
             self.user_cname + "_id"
-            ].loc[self.item_indices_decode[self.user_cname] == user].iloc[0]
+            ].loc[self.user_indices_decode[self.user_cname] == user].iloc[0]
 
     def index2item(self,
                    items_ids: list):
@@ -139,6 +158,7 @@ class ContentBasedFiltering(RecommendationSystem):
     """
     Represents recommendation system based on content-based-filtering
     """
+
     def __init__(self,
                  stemmer):
         super(ContentBasedFiltering, self).__init__()
@@ -178,11 +198,13 @@ class ContentBasedFiltering(RecommendationSystem):
             loader = loaders.CsvLoader(self.stemmer)
         elif loader_type == "db":
             if connection is None:
-                raise RuntimeError("SearchEngine::load: received connection equals "
-                                   "to None with a loader_type equals db")
+                raise RuntimeError("SearchEngine::load: received connection "
+                                   "equals to None with a loader_type equals "
+                                   "db")
             loader = loaders.DataBaseLoader(self.stemmer, connection)
         else:
-            raise RuntimeError("SearchEngine::load: no loader available for given loader_type")
+            raise RuntimeError("SearchEngine::load: no loader available for "
+                               "given loader_type")
         self.df_data = loader.merge_contents(
                 table,
                 self.item_id_cname,

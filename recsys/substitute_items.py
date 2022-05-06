@@ -15,7 +15,7 @@ class SubstituteItemRS(structural.ContentBasedFiltering):
     """
     def __init__(self,
                  stemmer,
-                 max_features=1e5,
+                 max_features=int(1e5),
                  stop_words=stopwords.words("russian")):
         """
         :param stemmer: stemmer to stem words from text data
@@ -63,8 +63,8 @@ class SubstituteItemRS(structural.ContentBasedFiltering):
 
 
 if __name__ == '__main__':
-    # !! MAKE SURE you have commented `dropna()`-line !!
-    # !! in build method, if run this part of code    !!
+    # !! MAKE SURE you have commented `drop()`-line   !!
+    # !! in `build` method, if run this part of code  !!
 
     ws = loaders.StemmerWrapper()
     substitutes_rs = SubstituteItemRS(ws)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
     print("loading started...")
     substitutes_rs.load(
-            "data/product.csv",
+            "small_data/product.csv",
             item_id_cname,
             item_content_cname,
             ["product_name", "description", "seller"]
