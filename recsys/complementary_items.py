@@ -85,11 +85,11 @@ class ComplementItemRS(structural.CollaborativeFiltering):
         :param res_n: count of items to find
         :return: `res_n` most similar to `item` items
         """
-        item_id = self.item2index(item)
+        item_id = self._item2index(item)
         # get vector corresponding to item
         item_vec = self.similarities[item_id].reshape(1, -1)[0]
         # choose top `res_n` and return them
-        return self.index2item(np.argsort(item_vec)[::-1][1:res_n + 1])
+        return self._index2item(np.argsort(item_vec)[::-1][1:res_n + 1])
 
     def recommend_to_user(self,
                           user,
@@ -100,7 +100,7 @@ class ComplementItemRS(structural.CollaborativeFiltering):
         :param res_n: count of items to recommend
         :return: `res_n` most suitable (by RS) items for `user`
         """
-        user_id = self.user2index(user)
+        user_id = self._user2index(user)
 
         # counting how our user relates to all items
         if self.sim_q is None:
@@ -116,7 +116,7 @@ class ComplementItemRS(structural.CollaborativeFiltering):
             scores_vec[self.sparse_matrix.indices[i], 0] = 0
 
         # choose top `res_n` and return them
-        return self.index2item(np.argsort(scores_vec.T)[0][::-1][:res_n])
+        return self._index2item(np.argsort(scores_vec.T)[0][::-1][:res_n])
 
     def fast_recommend(self,
                        user,
@@ -127,11 +127,15 @@ class ComplementItemRS(structural.CollaborativeFiltering):
         :param res_n: count of items to recommend
         :return: `res_n` most suitable (by RS) items for `user`
         """
-        user_id = self.user2index(user)
+        user_id = self._user2index(user)
         rec_vector = self.recommendations[user_id, :]
-        return self.index2item(rec_vector[:res_n])
+        return self._index2item(rec_vector[:res_n])
 
     def drop_slow(self):
+        """
+        delete all heavy object attrs that are not used in
+        fast_recommend method
+        """
         del self.similarities
         del self.sim_r
         del self.sim_q

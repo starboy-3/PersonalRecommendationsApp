@@ -214,14 +214,14 @@ class ImplicitRS(structural.CollaborativeFiltering):
         :param res_n: count of items to find
         :return: `res_n` most similar to `item` items
         """
-        item_id = self.item2index(item)
+        item_id = self._item2index(item)
         # get vector corresponding to item
         item_vec = self.items_matrix[item_id].T
         # multiply item_vec to items_matrix,
         # so we will just sort scalar products of vectors
         scores = self.items_matrix.dot(item_vec).reshape(1, -1)[0]
         # choose top `res_n` and return them
-        return self.index2item(np.argsort(scores)[::-1][:res_n])
+        return self._index2item(np.argsort(scores)[::-1][:res_n])
 
     def recommend_to_user(self,
                           user,
@@ -232,7 +232,7 @@ class ImplicitRS(structural.CollaborativeFiltering):
         :param res_n: count of items to recommend
         :return: `res_n` most suitable (by RS) items for `user`
         """
-        user_id = self.user2index(user)
+        user_id = self._user2index(user)
 
         # to not recommend items user has consumed/interacted
         user_interactions = self.sparse_matrix[user_id, :].toarray()
@@ -253,7 +253,7 @@ class ImplicitRS(structural.CollaborativeFiltering):
         recommend_vector = user_interactions * rec_vector_scaled
 
         # choose top `res_n` and return them
-        return self.index2item(np.argsort(recommend_vector)[::-1][:res_n])
+        return self._index2item(np.argsort(recommend_vector)[::-1][:res_n])
 
     def fast_recommend(self,
                        user,
@@ -264,11 +264,15 @@ class ImplicitRS(structural.CollaborativeFiltering):
             :param res_n: count of items to recommend
             :return: `res_n` most suitable (by RS) items for `user`
         """
-        user_id = self.user2index(user)
+        user_id = self._user2index(user)
         rec_vector = self.recommendations[user_id, :]
-        return self.index2item(rec_vector[:res_n])
+        return self._index2item(rec_vector[:res_n])
 
     def drop_slow(self):
+        """
+        delete all heavy object attrs that are not used in
+        fast_recommend method
+        """
         del self.sparse_matrix
         del self.users_matrix
         del self.items_matrix
