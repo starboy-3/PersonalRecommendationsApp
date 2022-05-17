@@ -12,6 +12,11 @@ class FastComplementItemRS(structural.CollaborativeFiltering):
     Actually, it can be used as complement items recommendation system,
     if user would be set to some `order`-type (so we will see what
     to recommend into user's shopping cart).
+
+    Differences between this implementation of Complementary Items and
+    ordinary one is that this Recommendation System uses matrix
+    factorization for building model without normalizing values
+    and forms matrix of recommendations in a build step
     """
 
     def __init__(self,
