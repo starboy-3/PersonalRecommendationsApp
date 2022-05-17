@@ -171,7 +171,6 @@ class ImplicitRS(structural.CollaborativeFiltering):
         here are used same params as in method `build`
         """
         # TODO try with + I
-
         # formatting confidences matrix
         c_user_item = (self.sparse_matrix * alpha).astype('double').tocsr()
         c_item_user = c_user_item.T
