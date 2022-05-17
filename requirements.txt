@@ -32,8 +32,8 @@ pycparser==2.21
 PyDispatcher==2.0.5
 pyOpenSSL==21.0.0
 queuelib==1.6.2
-requests==2.26.0
-Scrapy==2.5.1
+requests~=2.27.1
+Scrapy~=2.6.1
 service-identity==21.1.0
 six==1.16.0
 sqlparse==0.4.2
@@ -44,3 +44,8 @@ virtualenv==20.11.2
 virtualenv-clone==0.5.7
 w3lib==1.22.0
 zope.interface==5.4.0
+pandas~=1.4.1
+nltk~=3.7
+scipy~=1.7.3
+numpy~=1.20.3
+scikit-learn~=1.0.2

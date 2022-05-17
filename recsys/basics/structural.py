@@ -114,8 +114,8 @@ class CollaborativeFiltering(RecommendationSystem):
                     shape=(users_count, items_count)
             )
 
-    def item2index(self,
-                   item):
+    def _item2index(self,
+                    item):
         """
         :param item: item as it is stored in database
         :return: index used in this object for `item`
@@ -124,8 +124,8 @@ class CollaborativeFiltering(RecommendationSystem):
             self.item_cname + "_id"
             ].loc[self.item_indices_decode[self.item_cname] == item].iloc[0]
 
-    def user2index(self,
-                   user):
+    def _user2index(self,
+                    user):
         """
         :param user: user as it is stored in database
         :return: index used in this object for `user`
@@ -134,8 +134,8 @@ class CollaborativeFiltering(RecommendationSystem):
             self.user_cname + "_id"
             ].loc[self.user_indices_decode[self.user_cname] == user].iloc[0]
 
-    def index2item(self,
-                   items_ids: list):
+    def _index2item(self,
+                    items_ids: list):
         """
         :param items_ids: list of indices as they are stored in this
             object

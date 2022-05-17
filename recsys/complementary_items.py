@@ -15,14 +15,12 @@ class ComplementItemRS(structural.CollaborativeFiltering):
     """
 
     def __init__(self):
-        """
-           TODO для скорости выдачи рекомендации юзеру можем использовать матричную факторизацию QR/SVD/RSVD
-        """
         super(ComplementItemRS, self).__init__()
         # items similarities matrix (items x items)
         self.similarities = None
 
-    def build(self, via_normalize: bool = False):
+    def build(self,
+              via_normalize: bool = False):
         """
         :param via_normalize: set true if want to normalize items'
             vectors. They can be normalized for the situations, where
@@ -54,39 +52,46 @@ class ComplementItemRS(structural.CollaborativeFiltering):
         :param res_n: count of items to find
         :return: `res_n` most similar to `item` items
         """
-        item_id = self.item2index(item)
+        item_id = self._item2index(item)
         # get vector corresponding to item
         item_vec = self.similarities[item_id].reshape(1, -1)[0]
         # choose top `res_n` and return them
-        return self.index2item(np.argsort(item_vec)[::-1][1:res_n + 1])
+        return self._index2item(np.argsort(item_vec)[::-1][1:res_n + 1])
 
     def recommend_to_user(self,
                           user,
-                          res_n: int = 10):
-        """ если хотим recommend for this order, то user (здесь это order)
-            должен быть пустым; для лучше работы нужен метод update или тп
+                          res_n: int = 10,
+                          remove_consumed: bool = True):
         """
-        user_id = self.user2index(user)
+        :param user: user as it is stored in database
+            (meant it is in column that was given to load)
+        :param res_n: count of items to recommend
+        :param remove_consumed: set true if don't want to recommend
+            to user already consumed items
+        :return: `res_n` most suitable (by RS) items for `user`
+        """
+        user_id = self._user2index(user)
 
         # counting how our user relates to all items
         scores_vec = (self.similarities @ self.sparse_matrix[user_id, :].T)
-        # compared to max l1-norm of exact item's vector
         scores_vec /= np.array([np.abs(self.similarities).sum(axis=1)]).T
 
         # remove from our answer set already liked by user items
-        for i in range(self.sparse_matrix.indptr[user_id],
-                       self.sparse_matrix.indptr[user_id + 1]):
-            scores_vec[self.sparse_matrix.indices[i], 0] = 0
+        if remove_consumed:
+            for i in range(self.sparse_matrix.indptr[user_id],
+                           self.sparse_matrix.indptr[user_id + 1]):
+                scores_vec[self.sparse_matrix.indices[i], 0] = 0
 
         # choose top `res_n` and return them
-        return self.index2item(np.argsort(scores_vec.T)[0][::-1][:res_n])
+        return self._index2item(np.argsort(scores_vec.T)[0][::-1][:res_n])
 
 
 if __name__ == '__main__':
     complement_items = ComplementItemRS()
 
     print("loading started...")
-    complement_items.load("small_data/lastfm2collab.csv", ["user_id", "item_id"])
+    complement_items.load("small_data/lastfm2collab.csv",
+                          ["user_id", "item_id"])
     print("loading finished...")
 
     print("building started...")
