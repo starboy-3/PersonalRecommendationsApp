@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.sparse.linalg import svds
 
 """
 !pip install sentence-transformers
@@ -33,6 +32,13 @@ class DataClusterizer:
 
     def set_data(self,
                  data, *args):
+        """
+        :param data: 2-column pandas dataframe. One of the columns
+            must contains texts, and other their ids.
+        :param args: if given, then expected to consist of two values:
+            columns names of data for text's id and text itself
+            exactly in this order
+        """
         self.df_data = data
         if args:
             self.item_id_cname, self.content_cname = args
@@ -111,7 +117,9 @@ class DataClusterizer:
 
     def visualize(self):
         """
-        Run method after building cluster
+        decreases built embeddings to 2 components and visualizes
+        them by formatted clusterization labels.
+        Note! Run method after building cluster!
         """
         # decreasing dimensions of embeddings to 2,
         # so we can represent it in graphic
@@ -131,24 +139,47 @@ class DataClusterizer:
         outliers = result.loc[result.labels == -1, :]
         # clustered texts
         clustered = result.loc[result.labels != -1, :]
-        plt.scatter(outliers.x, outliers.y, color='#BDBDBD', s=0.05)
-        plt.scatter(clustered.x, clustered.y, c=clustered.labels, s=0.05, cmap='hsv_r')
+        plt.scatter(outliers.x,
+                    outliers.y,
+                    color='#BDBDBD',
+                    s=0.05)
+        plt.scatter(clustered.x,
+                    clustered.y,
+                    c=clustered.labels,
+                    s=0.05,
+                    cmap='hsv_r')
         plt.colorbar()
 
-    def form_items_labels_pd(self):
+    def get_labels(self):
+        """ return labeled items """
         return self.cluster.labels_
 
     def get_item_category(self,
                           item):
-        results = self.cluster.labels_[self.df_data.index[self.df_data[self.item_id_cname] == item]]
+        """
+        :param item: item as it is stored in dataframe
+        :return: category of item after clusterization
+        """
+        results = self.cluster.labels_[
+            self.df_data.index[
+                self.df_data[self.item_id_cname] == item
+                ]
+        ]
         if results:
             return results[0]
         return None
 
     def get_items_in_category(self,
                               topic_id):
+        """
+        :param topic_id: one of the categories gotten after
+            clusterization
+        :return: all items with given topic_id
+        """
         items_indices = np.argwhere(dc.cluster.labels_ == topic_id).T[0]
-        return self.df_data[self.item_id_cname].iloc[items_indices]
+        if items_indices:
+            return self.df_data[self.item_id_cname].iloc[items_indices]
+        return None
 
 
 if __name__ == '__main__':
