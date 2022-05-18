@@ -1,6 +1,6 @@
 import psycopg2
 from dynaconf import settings
-
+import app.db.db_api
 
 class PostgreSQLStorePipeline:
     def __init__(self):
@@ -18,6 +18,7 @@ class PostgreSQLStorePipeline:
 
     def process_item(self, item, spider):
         # FIXME            below sql
+        db_api.insert_shops()
         self.cur.execute("insert into quotes_content(content,author) values(%s,%s)", (item['content'], item['author']))
         self.connection.commit()
         return item

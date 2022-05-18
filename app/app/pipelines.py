@@ -21,14 +21,13 @@ class AppPipeline:
         database = settings.db_name # 'app' #TODO:
         self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         self.cur = self.connection.cursor()
-        self.cur.execute()
-        self.cur.execute()
 
-    def close_spider(self, spider):
-        self.cur.close()
-        self.connection.close()
 
     def process_item(self, item, spider):
         self.cur.execute() # FIXME:
         self.connection.commit()
         return item
+
+    def close_spider(self, spider):
+        self.cur.close()
+        self.connection.close()
