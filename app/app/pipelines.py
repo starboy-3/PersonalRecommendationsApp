@@ -22,6 +22,7 @@ class AppPipeline:
         self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         self.cur = self.connection.cursor()
         self.cur.execute()
+        self.cur.execute()
 
     def close_spider(self, spider):
         self.cur.close()

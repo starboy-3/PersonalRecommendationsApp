@@ -1,4 +1,4 @@
-# Scrapy settings for app project
+# Scrapy settings for CrawlingStar project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,16 +7,16 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'app'
+BOT_NAME = 'CrawlingStar'
 
-SPIDER_MODULES = ['app.spiders']
-NEWSPIDER_MODULE = 'app.spiders'
+SPIDER_MODULES = ['CrawlingStar.spiders']
+NEWSPIDER_MODULE = 'CrawlingStar.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'app (+http://www.yourdomain.com)'
+# USER_AGENT = 'CrawlingStar (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -44,14 +44,16 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'app.middlewares.AppSpiderMiddleware': 543,
+#    'CrawlingStar.middlewares.CrawlingstarSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'app.middlewares.AppDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    # 'CrawlingStar.middlewares.CrawlingstarDownloaderMiddleware': 543,
+    # 'CrawlingStar.middlewares.BanDetectionMiddleware': 620,
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -61,9 +63,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'app.pipelines.AppPipeline': 300
-}
+# ITEM_PIPELINES = {
+#    'CrawlingStar.pipelines.CrawlingstarPipeline': 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -85,3 +87,4 @@ ITEM_PIPELINES = {
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+# ROTATING_PROXY_LIST_PATH = 'foxproxy.txt'
