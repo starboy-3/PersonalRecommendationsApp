@@ -22,6 +22,7 @@ def filter_price(value: str) -> str:
 
 
 class ProductItem(scrapy.Item):
+    product_url = scrapy.Field()
     product_id = scrapy.Field()
     product_name = scrapy.Field()
     seller = scrapy.Field()

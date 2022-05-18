@@ -6,35 +6,35 @@ class WildberriesSpider(scrapy.Spider):
     allowed_domains = ['www.wildberries.ru']
     start_urls = [
         # 'https://www.wildberries.ru/catalog/yuvelirnye-ukrasheniya/koltsa',     # FOR RUN IN TEST MODE
-        'https://www.wildberries.ru/catalog/zhenshchinam',
-        'https://www.wildberries.ru/catalog/obuv',
-        'https://www.wildberries.ru/catalog/detyam',
-        'https://www.wildberries.ru/catalog/muzhchinam',
-        'https://www.wildberries.ru/catalog/dom-i-dacha',
-        'https://www.wildberries.ru/catalog/krasota',
-        'https://www.wildberries.ru/catalog/aksessuary',
+        # 'https://www.wildberries.ru/catalog/zhenshchinam',
+        # 'https://www.wildberries.ru/catalog/obuv',
+        # 'https://www.wildberries.ru/catalog/detyam',
+        # 'https://www.wildberries.ru/catalog/muzhchinam',
+        # 'https://www.wildberries.ru/catalog/dom-i-dacha',
+        # 'https://www.wildberries.ru/catalog/krasota',
+        # 'https://www.wildberries.ru/catalog/aksessuary',
         'https://www.wildberries.ru/catalog/elektronika',
-        'https://www.wildberries.ru/catalog/igrushki',
-        'https://www.wildberries.ru/catalog/aksessuary/tovary-dlya-vzroslyh',
-        'https://www.wildberries.ru/catalog/pitanie',
-        'https://www.wildberries.ru/catalog/bytovaya-tehnika',
-        'https://www.wildberries.ru/catalog/tovary-dlya-zhivotnyh',
-        'https://www.wildberries.ru/catalog/aksessuary/avtotovary',
-        'https://www.wildberries.ru/catalog/knigi',
-        'https://www.wildberries.ru/catalog/yuvelirnye-ukrasheniya',
-        'https://www.wildberries.ru/catalog/dom-i-dacha/instrumenty',
-        'https://www.wildberries.ru/catalog/dachniy-sezon',
-        'https://www.wildberries.ru/catalog/produkty/alkogolnaya-produktsiya',
-        'https://www.wildberries.ru/catalog/dom-i-dacha/zdorove',
-        'https://www.wildberries.ru/catalog/knigi-i-diski/kantstovary'
+        # 'https://www.wildberries.ru/catalog/igrushki',
+        # 'https://www.wildberries.ru/catalog/aksessuary/tovary-dlya-vzroslyh',
+        # 'https://www.wildberries.ru/catalog/pitanie',
+        # 'https://www.wildberries.ru/catalog/bytovaya-tehnika',
+        # 'https://www.wildberries.ru/catalog/tovary-dlya-zhivotnyh',
+        # 'https://www.wildberries.ru/catalog/aksessuary/avtotovary',
+        # 'https://www.wildberries.ru/catalog/knigi',
+        # 'https://www.wildberries.ru/catalog/yuvelirnye-ukrasheniya',
+        # 'https://www.wildberries.ru/catalog/dom-i-dacha/instrumenty',
+        # 'https://www.wildberries.ru/catalog/dachniy-sezon',
+        # 'https://www.wildberries.ru/catalog/produkty/alkogolnaya-produktsiya',
+        # 'https://www.wildberries.ru/catalog/dom-i-dacha/zdorove',
+        # 'https://www.wildberries.ru/catalog/knigi-i-diski/kantstovary'
     ]
 
     def parse(self, response):
-        list = response.css('div.menu-catalog').css('ul.menu-catalog__list-2').css('li')
-        print(list.css('a::attr(href)').getall())
+        print(response.xpath('//ul[@class="menu-burger__main-list"]/li/a/@href').get())
+        list = response.xpath('//div[@class="menu-catalog"]//a[@class="j-menu-item"]//@href')
+        print(list)
         for cat in list:
-            link_to_cat = cat.css('a::attr(href)').get()
-            link_to_cat = link_to_cat + '?page=1'
+            link_to_cat = cat + '?page=1'
             yield response.follow(link_to_cat, callback=self.parse_page)
 
     def parse_page(self, response):
@@ -44,7 +44,7 @@ class WildberriesSpider(scrapy.Spider):
 
         next_page = response.css('a.pagination__next').attrib['href']
         if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
+            yield response.follow(next_page, callback=self.parse_page)
 
     def parse_product(self, response):
         product = response.css('div.main__container')
