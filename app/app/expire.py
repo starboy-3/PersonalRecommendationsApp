@@ -130,7 +130,7 @@ class Proxies(object):
                 len(self.good), len(self.dead),
                 len(self.unchecked) - n_reanimated, n_reanimated,
                 int(self.mean_backoff_time),
-                )
+                                                )
 
 
 @attr.s
