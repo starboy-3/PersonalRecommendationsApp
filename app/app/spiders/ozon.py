@@ -1,6 +1,6 @@
 import scrapy
 import json
-import time
+
 
 class OzonSpider(scrapy.Spider):
     name = 'ozon'
@@ -9,13 +9,13 @@ class OzonSpider(scrapy.Spider):
     custom_settings = {
         'USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15',
         'AUTOTHROTTLE_ENABLED': True,
-        'AUTOTHROTTLE_START_DELAY':  5.0,
+        'AUTOTHROTTLE_START_DELAY': 5.0,
         'AUTOTHROTTLE_TARGET_CONCURRENCY': 1.0
     }
 
     def parse(self, response):
         def get_json_page(s):
-                    return f'https://www.ozon.ru/api/composer-api.bx/page/json/v2?url={s}'
+            return f'https://www.ozon.ru/api/composer-api.bx/page/json/v2?url={s}'
         data = json.loads(response.text)
         categories = data['data']['categories']
         for cat in categories:
@@ -26,9 +26,9 @@ class OzonSpider(scrapy.Spider):
     def parse_cat(self, response):
         def get_json_page(s):
             return f'https://www.ozon.ru/api/composer-api.bx/page/json/v2?url={s}'
-        
+
         self.logger.info('Parse function called on %s', response.url)
-                
+
         data = json.loads(response.text)
         widgetStates = data['widgetStates']
         nextpage = None
@@ -43,7 +43,7 @@ class OzonSpider(scrapy.Spider):
                 for i in val['items']:
                     if 'link' in i['action']:
                         yield scrapy.Request(get_json_page(i['action']['link']), self.parse_product)
-                
+
         if nextpage is not None:
             yield scrapy.Request(get_json_page(nextpage), self.parse_cat)
 
@@ -97,7 +97,4 @@ class OzonSpider(scrapy.Spider):
             fd.close()
             yield scrapy.Request(response.url, self.parse_product)
 
-                
         yield item
-
-

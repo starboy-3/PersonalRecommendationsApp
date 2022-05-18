@@ -127,10 +127,10 @@ class Proxies(object):
         n_reanimated = len(self.reanimated)
         return "Proxies(good: {}, dead: {}, unchecked: {}, reanimated: {}, " \
                "mean backoff time: {}s)".format(
-            len(self.good), len(self.dead),
-            len(self.unchecked) - n_reanimated, n_reanimated,
-            int(self.mean_backoff_time),
-        )
+                len(self.good), len(self.dead),
+                len(self.unchecked) - n_reanimated, n_reanimated,
+                int(self.mean_backoff_time),
+                )
 
 
 @attr.s
