@@ -7,10 +7,10 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'CrawlingStar'
+BOT_NAME = 'app'
 
-SPIDER_MODULES = ['CrawlingStar.spiders']
-NEWSPIDER_MODULE = 'CrawlingStar.spiders'
+SPIDER_MODULES = ['app.spiders']
+NEWSPIDER_MODULE = 'app.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'CrawlingStar (+http://www.yourdomain.com)'
@@ -44,15 +44,26 @@ ROBOTSTXT_OBEY = False
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'CrawlingStar.middlewares.CrawlingstarSpiderMiddleware': 543,
+#    'app.middlewares.appSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
+
+FAKEUSERAGENT_PROVIDERS = [
+    'scrapy_fake_useragent.providers.FakeUserAgentProvider',  # this is the first provider we'll try
+    'scrapy_fake_useragent.providers.FakerProvider',  # if FakeUserAgentProvider fails, we'll use faker to generate a user-agent string for us
+    'scrapy_fake_useragent.providers.FixedUserAgentProvider',  # fall back to USER_AGENT value
+]
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15'
 DOWNLOADER_MIDDLEWARES = {
-    # 'CrawlingStar.middlewares.CrawlingstarDownloaderMiddleware': 543,
-    # 'CrawlingStar.middlewares.BanDetectionMiddleware': 620,
-    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    # 'app.middlewares.appDownloaderMiddleware': 543,
+    'app.middlewares.BanDetectionMiddleware': 620,
+    # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+    'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': None,
+    'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 400,
+    'scrapy_fake_useragent.middleware.RetryUserAgentMiddleware': 401,
 }
 
 # Enable or disable extensions
@@ -64,7 +75,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES = {
-#    'CrawlingStar.pipelines.CrawlingstarPipeline': 300,
+#    'app.pipelines.AppPipeline': 300,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

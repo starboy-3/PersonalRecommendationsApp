@@ -13,6 +13,7 @@ Scrapy = "~=2.6.0"
 psycopg2-binary = "*"
 dynaconf = "*"
 flake8 = "*"
+scrapy-fake-useragent = "*"
 
 [dev-packages]
 

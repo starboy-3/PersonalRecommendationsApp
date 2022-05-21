@@ -7,7 +7,6 @@ class OzonSpider(scrapy.Spider):
     allowed_domains = ['ozon.ru']
     start_urls = ['https://www.ozon.ru/api/composer-api.bx/_action/v2/categoryChildV2?menuId=1&categoryId=15500&hash=bfe77051-7cd6-456f-97e9-3df232db3e36']
     custom_settings = {
-        'USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15',
         'AUTOTHROTTLE_ENABLED': True,
         'AUTOTHROTTLE_START_DELAY': 5.0,
         'AUTOTHROTTLE_TARGET_CONCURRENCY': 1.0
