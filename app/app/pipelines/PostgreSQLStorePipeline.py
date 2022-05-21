@@ -1,5 +1,5 @@
 import psycopg2
-from dynaconf import settings
+from config import settings
 import app.db.db_api
 
 class PostgreSQLStorePipeline:

@@ -1,3 +1,5 @@
 __pycache__
 .json
-app/.env
+.env
+# Ignore dynaconf secret files
+.secrets.*

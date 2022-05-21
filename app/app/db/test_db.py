@@ -1,6 +1,6 @@
 import db_api
 import psycopg2
-from dynaconf import settings
+from config import settings
 
 
 def main():
@@ -9,19 +9,15 @@ def main():
     password = settings['db_password']
     database = settings["db_name"]
     connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+    connection.set_session(autocommit=True)
     try:
         cursor = connection.cursor()
-        postgreSQL_select_Query = "select * from shops"
-
-        cursor.execute(postgreSQL_select_Query)
-        print("Selecting rows")
-        mobile_records = cursor.fetchall()
-
-        print("Print each row and it's columns values")
-        for row in mobile_records:
-            print("Seller_id  = ", row[0],)
-            print("Name = ", row[1], )
-            print("Rating = ", row[2], "\n")
+        cursor.execute(
+            "insert into shops(name, rating) values (%s, %s) RETURNING seller_id;",
+            ("d", 4.7, )
+        )
+        id = cursor.fetchall()
+        print(id)
 
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
