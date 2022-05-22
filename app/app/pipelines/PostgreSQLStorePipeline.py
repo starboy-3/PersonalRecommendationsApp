@@ -1,6 +1,6 @@
 import psycopg2
 from config import settings
-import app.db.db_api
+import db_api
 
 class PostgreSQLStorePipeline:
     def __init__(self):
@@ -17,9 +17,17 @@ class PostgreSQLStorePipeline:
         self.connection.set_session(autocommit=True)
 
     def process_item(self, item, spider):
-        # FIXME            below sql
-        db_api.insert_shops()
-        self.cur.execute("insert into quotes_content(content,author) values(%s,%s)", (item['content'], item['author']))
+        # FIXME            retrieving fields from item
+        db_api.insert_shop(name=shop_name, seller_id=seller_id, cursor=cursor)
+        db_api.insert_product_by_seller_id(name=product_name,
+                                           brand=brand,
+                                           description=description,
+                                           seller_id=seller_id,
+                                           image_link=image_link,
+                                           link=link,
+                                           price=price,
+                                           category=category,
+                                           cursor=cursor)
         self.connection.commit()
         return item
 
