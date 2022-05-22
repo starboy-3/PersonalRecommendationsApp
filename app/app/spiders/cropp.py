@@ -12,7 +12,7 @@ class CroppSpider(scrapy.Spider):
     def parse(self, response):
         l = ItemLoader(item=ProductItem(), selector=response)
 
-        l.add_xpath('title', '//h1[@class="product-name"]/text()')
+        l.add_xpath('title', '//h1[@class="product-name"]/text()') # //div[@class = "product-name-wrapper"]/h1/text()
         l.add_xpath('price', '//div[@class="promo-price"]/text()')
         l.add_xpath('description', '/html/body/div[1]/section/div[2]/div/div/section/div[2]/div/div[1]/div/div/div/div/ul')
         l.add_xpath('image_urls', '/html/body/div[1]/section/div[2]/div/div/section/section/section/aside[2]/div/div[1]/img/@src')
