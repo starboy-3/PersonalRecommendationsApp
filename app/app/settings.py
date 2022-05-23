@@ -1,4 +1,4 @@
-# Scrapy settings for CrawlingStar project
+# Scrapy settings for app project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -13,18 +13,18 @@ SPIDER_MODULES = ['app.spiders']
 NEWSPIDER_MODULE = 'app.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'CrawlingStar (+http://www.yourdomain.com)'
+# USER_AGENT = 'app(+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 24
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -74,9 +74,12 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'app.pipelines.AppPipeline': 300,
-# }
+ITEM_PIPELINES = {
+    # 'app.pipelines.WildberriesPipeline': 300, # default
+    # 'app.pipelines.MultiCSVItemPipeline.MultiCSVItemPipeline': 300,
+    "app.pipelines.CheckFieldsPresentPipeline.CheckFieldsPresentPipeline" : 1,
+    "app.pipelines.PostgreSQLStorePipeline.PostgreSQLStorePipeline" : 20
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -98,4 +101,3 @@ DOWNLOADER_MIDDLEWARES = {
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-# ROTATING_PROXY_LIST_PATH = 'foxproxy.txt'
