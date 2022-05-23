@@ -13,6 +13,34 @@ search_eng = SearchEngine(ws)
 item_id_cname, item_content_cname = "product_id", "content_info"
 
 
+def get_info_from_db(indices):
+    hostname = settings["db_hostname"]
+    username = settings['db_username']
+    password = settings['db_password']
+    database = settings["db_name"]
+    connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+    connection.set_session(autocommit=True)
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            "insert into shops(name, rating) values (%s, %s) RETURNING seller_id;",
+            ("d", 4.7,)
+        )
+        id = cursor.fetchall()
+        print(id)
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error while fetching data from PostgreSQL", error)
+
+    finally:
+        # closing database connection.
+        if connection:
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+    return []
+
+
 @app.route('/search/<string:search_query>', methods=['GET'])
 @cross_origin()
 def receive_search_request(search_query):
@@ -25,7 +53,7 @@ def receive_search_request(search_query):
     """
     print('got some search query:', search_query)
     db_indices = search_eng.search(search_query)
-    # do some requests in DB
+    info = get_info_from_db(db_indices)
     result = {'indices': '[' + ', '.join(list(
                             map(lambda x: str(x), db_indices))) + ']'}
     print('res:', result)
