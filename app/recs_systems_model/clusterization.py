@@ -1,13 +1,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
-"""
-!pip install sentence-transformers
-!pip install umap-learn
-!pip install hdbscan
-"""
-
 from sentence_transformers import SentenceTransformer
 import umap
 import hdbscan
