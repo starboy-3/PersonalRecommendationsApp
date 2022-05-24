@@ -31,6 +31,17 @@ class ProductItem(scrapy.Item):
     # features = scrapy.Field()   # store as JSON object? or should we create new tables?
 
 
+class OzonProductItem(scrapy.Item):
+    brand = scrapy.Field()
+    category = scrapy.Field()
+    link = scrapy.Field()
+    price = scrapy.Field()
+    sellerID = scrapy.Field()
+    sellerName = scrapy.Field()
+    image = scrapy.Field()
+    desc = scrapy.Field()
+
+
 class ProductItemLoader(ItemLoader):
     default_output_processor = TakeFirst()
     product_name_in = MapCompose(str.strip)
