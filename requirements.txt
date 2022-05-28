@@ -49,3 +49,9 @@ nltk~=3.7
 scipy~=1.7.3
 numpy~=1.20.3
 scikit-learn~=1.0.2
+Flask==2.0.1
+flask_cors==3.0.10
+hdbscan==0.8.28
+matplotlib==3.4.2
+sentence_transformers==2.2.0
+umap==0.1.1
