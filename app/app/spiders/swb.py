@@ -1,12 +1,9 @@
 import scrapy
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from scrapy_selenium import SeleniumRequest
 from scrapy.linkextractors import LinkExtractor
-import re
-import random
+from scrapy_selenium import SeleniumRequest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
 from app.items import OzonProductItem
 
 
@@ -65,7 +62,7 @@ class SwbSpider(scrapy.Spider):
         item = OzonProductItem()
         prod = response.css('div.main__container')
         price = prod.css('span.price-block__final-price::text').get()
-        if price != None:
+        if price is not None:
             price = price.replace('\u00a0', '').replace('\u20bd', '').strip()
         item['link'] = response.url
         item['brand'] = prod.css('h1.same-part-kt__header').css('span::text').getall()[0]

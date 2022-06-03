@@ -9,6 +9,7 @@ import psycopg2
 # from itemadapter import ItemAdapter
 from dynaconf import settings
 
+
 class AppPipeline:
     def __init__(self):
         self.cur = None
@@ -23,12 +24,12 @@ class AppPipeline:
         self.cur = self.connection.cursor()
 
 
-class AppPipeline:
-    def process_item(self, item, spider):
-        self.cur.execute() # FIXME:
-        self.connection.commit()
-        return item
-
-    def close_spider(self, spider):
-        self.cur.close()
-        self.connection.close()
+# class AppPipeline:
+#     def process_item(self, item, spider):
+#         self.cur.execute()
+#         self.connection.commit()
+#         return item
+#
+#     def close_spider(self, spider):
+#         self.cur.close()
+#         self.connection.close()
