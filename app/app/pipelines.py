@@ -23,6 +23,7 @@ class AppPipeline:
         self.cur = self.connection.cursor()
 
 
+class AppPipeline:
     def process_item(self, item, spider):
         self.cur.execute() # FIXME:
         self.connection.commit()

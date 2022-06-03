@@ -1,17 +1,23 @@
 import scrapy
 import json
 
+from app.items import OzonProductItem
 
 class OzonSpider(scrapy.Spider):
     name = 'ozon'
     allowed_domains = ['ozon.ru']
-    start_urls = ['https://www.ozon.ru/api/composer-api.bx/_action/v2/categoryChildV2?menuId=1&categoryId=15500&hash=bfe77051-7cd6-456f-97e9-3df232db3e36']
-    custom_settings = {
-        'USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15',
-        'AUTOTHROTTLE_ENABLED': True,
-        'AUTOTHROTTLE_START_DELAY': 5.0,
-        'AUTOTHROTTLE_TARGET_CONCURRENCY': 1.0
-    }
+
+    def start_requests(self):
+        url = 'https://www.ozon.ru/api/composer-api.bx/_action/v2/categoryChildV2?menuId=1&categoryId=15500'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.143 YaBrowser/22.5.0.1814 Yowser/2.5 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Accept-Language': 'ru,en;q=0.9,mt;q=0.8,cy;q=0.7',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+        }
+        yield scrapy.http.Request(url, headers=headers)
 
     def parse(self, response):
         def get_json_page(s):
@@ -21,7 +27,6 @@ class OzonSpider(scrapy.Spider):
         for cat in categories:
             for c in cat['categories']:
                 yield scrapy.Request(get_json_page(c['url']), self.parse_cat)
-
 
     def parse_cat(self, response):
         def get_json_page(s):
@@ -51,13 +56,13 @@ class OzonSpider(scrapy.Spider):
         self.logger.info('Parse Product function called on %s', response.url)
         data = json.loads(response.text)
         widgetStates = data['widgetStates']
-        item = {}
+        item = OzonProductItem()
         lti = json.loads(data['layoutTrackingInfo'])
         if 'brandName' in lti:
-            item['Brand'] = lti['brandName']
+            item['brand'] = lti['brandName']
         if 'categoryName' in lti:
-            item['Category'] = lti['categoryName']
-        item['Link'] = 'https://www.ozon.ru' + response.url.split('=')[1].split('?')[0]
+            item['category'] = lti['categoryName']
+        item['link'] = 'https://www.ozon.ru' + response.url.split('=')[1].split('?')[0]
         desc = ''
         for key, val in widgetStates.items():
             val = json.loads(val)
@@ -66,18 +71,18 @@ class OzonSpider(scrapy.Spider):
                     item['Название'] = val['title']
             if 'webSale' in key:
                 if 'price' in val['offers'][0]:
-                    item['Price'] = val['offers'][0]['price']
-                    item['Price'] = item['Price'].replace('\u2009', '').replace('₽', '')
+                    item['price'] = val['offers'][0]['price']
+                    item['price'] = item['price'].replace('\u2009', '').replace('₽', '')
             if 'webCurrentSeller' in key:
                 if 'id' in val:
                     item['sellerID'] = val['id']
                 if 'name' in val:
-                    item['SellerName'] = val['name']
+                    item['sellerName'] = val['name']
             if 'webGallery' in key:
                 if 'coverImage' in val:
-                    item['Image'] = val['coverImage']
+                    item['image'] = val['coverImage']
                 else:
-                    item['Image'] = 'Изображение отсутствует'
+                    item['image'] = 'Изображение отсутствует'
             if 'webCharacteristics' in key:
                 if 'characteristics' in val:
                     chars = val['characteristics']
@@ -90,8 +95,8 @@ class OzonSpider(scrapy.Spider):
                             b = True
                             desc += j['text']
                         desc += '\n'
-                item['Desc'] = desc
-        if item['Price'] == '':
+                item['desc'] = desc
+        if item['price'] == '':
             fd = open('jsons/' + item['Название'], 'w')
             fd.write(response.text)
             fd.close()

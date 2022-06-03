@@ -19,7 +19,7 @@ from .expire import Proxies, exp_backoff_full_jitter
 logger = logging.getLogger(__name__)
 
 
-class CrawlingStarSpiderMiddleware(object):
+class AppSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -67,7 +67,7 @@ class CrawlingStarSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class CrawlingStarDownloaderMiddleware(object):
+class appDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -357,7 +357,7 @@ class BanDetectionMiddleware(object):
     def _load_policy(cls, crawler):
         policy_path = crawler.settings.get(
             'ROTATING_PROXY_BAN_POLICY',
-            'CrawlingStar.policy.BanDetectionPolicy'
+            'app.policy.BanDetectionPolicy'
         )
         policy_cls = load_object(policy_path)
         if hasattr(policy_cls, 'from_crawler'):
