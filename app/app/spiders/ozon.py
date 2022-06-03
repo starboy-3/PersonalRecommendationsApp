@@ -3,21 +3,14 @@ import json
 
 from app.items import OzonProductItem
 
+
 class OzonSpider(scrapy.Spider):
     name = 'ozon'
     allowed_domains = ['ozon.ru']
 
     def start_requests(self):
-        url = 'https://www.ozon.ru/api/composer-api.bx/_action/v2/categoryChildV2?menuId=1&categoryId=15500'
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.143 YaBrowser/22.5.0.1814 Yowser/2.5 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'Accept-Language': 'ru,en;q=0.9,mt;q=0.8,cy;q=0.7',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-        }
-        yield scrapy.http.Request(url, headers=headers)
+        url = 'https://www.ozon.    ru/api/composer-api.bx/_action/v2/categoryChildV2?menuId=1&categoryId=15500'
+        yield scrapy.Request(url)
 
     def parse(self, response):
         def get_json_page(s):
@@ -68,7 +61,7 @@ class OzonSpider(scrapy.Spider):
             val = json.loads(val)
             if 'webProductHeading' in key:
                 if 'title' in val:
-                    item['Название'] = val['title']
+                    item['title'] = val['title']
             if 'webSale' in key:
                 if 'price' in val['offers'][0]:
                     item['price'] = val['offers'][0]['price']

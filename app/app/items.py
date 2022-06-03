@@ -1,6 +1,5 @@
 import scrapy
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst, MapCompose
 
 
 class PageItem(scrapy.Item):
@@ -12,7 +11,8 @@ class PageItem(scrapy.Item):
 
 
 class PageItemLoader(ItemLoader):
-    default_output_processor = TakeFirst()
+    # default_output_processor = TakeFirst()
+    pass
 
 
 def filter_price(value: str) -> str:
@@ -32,6 +32,7 @@ class ProductItem(scrapy.Item):
 
 
 class OzonProductItem(scrapy.Item):
+    title = scrapy.Field()
     brand = scrapy.Field()
     category = scrapy.Field()
     link = scrapy.Field()
@@ -43,8 +44,9 @@ class OzonProductItem(scrapy.Item):
 
 
 class ProductItemLoader(ItemLoader):
-    default_output_processor = TakeFirst()
-    product_name_in = MapCompose(str.strip)
-    seller_in = MapCompose(str.strip)
-    price_in = MapCompose(filter_price)
-    description_in = MapCompose(str.strip)
+    # default_output_processor = TakeFirst()
+    # product_name_in = MapCompose(str.strip)
+    # seller_in = MapCompose(str.strip)
+    # price_in = MapCompose(filter_price)
+    # description_in = MapCompose(str.strip)
+    pass

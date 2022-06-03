@@ -6,6 +6,11 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+from shutil import which
+
+SELENIUM_DRIVER_NAME = 'chrome'
+SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+SELENIUM_DRIVER_ARGUMENTS = ['-headless', '--log-level=3', '--disable-logging']
 
 BOT_NAME = 'app'
 
@@ -16,10 +21,10 @@ NEWSPIDER_MODULE = 'app.spiders'
 # USER_AGENT = 'app(+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 24
+CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -59,11 +64,12 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 DOWNLOADER_MIDDLEWARES = {
     # 'app.middlewares.appDownloaderMiddleware': 543,
     'app.middlewares.BanDetectionMiddleware': 620,
+    'scrapy_selenium.SeleniumMiddleware': 800,
     # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
-    'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': None,
-    'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 400,
-    'scrapy_fake_useragent.middleware.RetryUserAgentMiddleware': 401,
+    # 'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+    # 'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': None,
+    # 'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 400,
+    # 'scrapy_fake_useragent.middleware.RetryUserAgentMiddleware': 401,
 }
 
 # Enable or disable extensions
@@ -77,8 +83,8 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     # 'app.pipelines.WildberriesPipeline': 300, # default
     # 'app.pipelines.MultiCSVItemPipeline.MultiCSVItemPipeline': 300,
-    "app.pipelines.CheckFieldsPresentPipeline.CheckFieldsPresentPipeline" : 1,
-    "app.pipelines.PostgreSQLStorePipeline.PostgreSQLStorePipeline" : 20
+    # "app.pipelines.CheckFieldsPresentPipeline.CheckFieldsPresentPipeline" : 1,
+    # "app.pipelines.PostgreSQLStorePipeline.PostgreSQLStorePipeline" : 20
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
