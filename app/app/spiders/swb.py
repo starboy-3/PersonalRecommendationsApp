@@ -1,12 +1,9 @@
 import scrapy
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from scrapy_selenium import SeleniumRequest
 from scrapy.linkextractors import LinkExtractor
-import re
-import random
+from scrapy_selenium import SeleniumRequest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
 from app.items import OzonProductItem
 
 
@@ -17,27 +14,7 @@ class SwbSpider(scrapy.Spider):
     # start_urls = ['http://https://www.wildberries.ru/']
 
     def start_requests(self):
-        urls = ['https://www.wildberries.ru/catalog/zhenshchinam',
-                'https://www.wildberries.ru/catalog/obuv',
-                'https://www.wildberries.ru/catalog/detyam',
-                'https://www.wildberries.ru/catalog/muzhchinam',
-                'https://www.wildberries.ru/catalog/dom-i-dacha',
-                'https://www.wildberries.ru/catalog/krasota',
-                'https://www.wildberries.ru/catalog/aksessuary',
-                'https://www.wildberries.ru/catalog/elektronika',
-                'https://www.wildberries.ru/catalog/igrushki',
-                'https://www.wildberries.ru/catalog/aksessuary/tovary-dlya-vzroslyh',
-                'https://www.wildberries.ru/catalog/pitanie',
-                'https://www.wildberries.ru/catalog/bytovaya-tehnika',
-                'https://www.wildberries.ru/catalog/tovary-dlya-zhivotnyh',
-                'https://www.wildberries.ru/catalog/aksessuary/avtotovary',
-                'https://www.wildberries.ru/catalog/knigi',
-                'https://www.wildberries.ru/catalog/yuvelirnye-ukrasheniya',
-                'https://www.wildberries.ru/catalog/dom-i-dacha/instrumenty',
-                'https://www.wildberries.ru/catalog/dachniy-sezon',
-                'https://www.wildberries.ru/catalog/produkty/alkogolnaya-produktsiya',
-                'https://www.wildberries.ru/catalog/dom-i-dacha/zdorove',
-                'https://www.wildberries.ru/catalog/knigi-i-diski/kantstovary']
+        urls = ["https://www.wildberries.ru/catalog/elektronika/noutbuki-periferiya"]
         for url in urls:
             yield SeleniumRequest(url=url,
                                   callback=self.parse, wait_time=3600,
@@ -65,7 +42,7 @@ class SwbSpider(scrapy.Spider):
         item = OzonProductItem()
         prod = response.css('div.main__container')
         price = prod.css('span.price-block__final-price::text').get()
-        if price != None:
+        if price is not None:
             price = price.replace('\u00a0', '').replace('\u20bd', '').strip()
         item['link'] = response.url
         item['brand'] = prod.css('h1.same-part-kt__header').css('span::text').getall()[0]

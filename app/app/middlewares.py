@@ -8,8 +8,7 @@ import logging
 from functools import partial
 from urllib.parse import urlsplit
 
-from scrapy import signals
-from scrapy.exceptions import CloseSpider, NotConfigured
+from scrapy.exceptions import CloseSpider
 from scrapy.utils.misc import load_object
 from scrapy.utils.url import add_http_if_no_scheme
 from twisted.internet import task
@@ -29,7 +28,7 @@ class SeleniumMiddleware:
     """Scrapy middleware handling the requests using selenium"""
 
     def __init__(self, driver_name, driver_executable_path,
-        browser_executable_path, command_executor, driver_arguments):
+                 browser_executable_path, command_executor, driver_arguments):
         """Initialize the selenium webdriver
         Parameters
         ----------
