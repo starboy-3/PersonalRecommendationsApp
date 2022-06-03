@@ -1,0 +1,1 @@
+docker run rec_sys:latest

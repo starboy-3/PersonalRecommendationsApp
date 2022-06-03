@@ -15,4 +15,4 @@ RUN apt-get install -y  \
 RUN pip install -r requirements.txt
 
 # main.py will be entrypoint
-CMD ["pipenv", "run", "python", "main.py"]
+CMD ["pipenv", "run", "python", "app/main.py"]
