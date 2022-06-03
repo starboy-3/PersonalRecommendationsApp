@@ -1,6 +1,6 @@
 async function doRequest() {
     var data = document.getElementById("search").value;
-    var url = "http://192.168.211.84:8080/search/" + data
+    var url = "http://10.77.15.146:8080/search/" + data
     var text = "";
     let response = await fetch(url, {
       methode: 'GET',
@@ -26,13 +26,11 @@ async function doRequest() {
         let p = doc.createElement("p");
         p.textContent = "This is a new paragraph.";
         try {
-          doc.body.appendChild(p);
-        } catch(e) {
-          console.log(e);
+            doc.body.appendChild(p);
+        } catch (e) {
+            console.log(e);
         }
     }
-
-
   
     // Copy the new HTML document into the frame
 
