@@ -19,7 +19,7 @@ itemadapter==0.4.0
 itemloaders==1.0.4
 items==0.6.5
 jmespath==0.10.0
-lxml==4.7.1
+lxml==4.9.1
 nulltype==2.3.1
 parsel==1.6.0
 pipenv==2022.1.8
