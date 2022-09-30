@@ -17,17 +17,16 @@ class PostgreSQLStorePipeline:
         self.connection.set_session(autocommit=True)
 
     def process_item(self, item, spider):
-        # FIXME            retrieving fields from item
-        db_api.insert_shop(name=shop_name, seller_id=seller_id, cursor=cursor)
-        db_api.insert_product_by_seller_id(name=product_name,
-                                           brand=brand,
-                                           description=description,
-                                           seller_id=seller_id,
-                                           image_link=image_link,
-                                           link=link,
-                                           price=price,
-                                           category=category,
-                                           cursor=cursor)
+        db_api.insert_shop(name=item['shop_name'], seller_id=item['seller_id'], cursor=item['cursor'])
+        db_api.insert_product_by_seller_id(name=item['product_name'],
+                                           brand=item['brand'],
+                                           description=item['description'],
+                                           seller_id=item['seller_id'],
+                                           image_link=item['image_link'],
+                                           link=item['link'],
+                                           price=item['price'],
+                                           category=item['category'],
+                                           cursor=item['cursor'])
         self.connection.commit()
         return item
 
